@@ -1,3 +1,3 @@
-import './css/styles.css';
-import { Notify } from 'notiflix/build/notiflix-notify-aio';
+import './sass/main.scss';
+// import { Notify } from 'notiflix/build/notiflix-notify-aio';
 
