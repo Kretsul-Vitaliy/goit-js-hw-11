@@ -47,27 +47,31 @@ export default class ImagesAPIService {
   }
 
   async fetchImages() {
-    const options = this.getOptions();
-
-    const response = await axios.get(`?${options}`);
-    const data = await response.data;
-
-    this.totalHits = data.totalHits;
-    this.totalPages = Math.ceil(this.totalHits / this.PER_PAGE);
-    this.resetEndOfHits();
-
-    if (data.total === 0) {
-      throw new Error('Sorry, there are no images matching your search query. Please try again.');
-    }
-
-    const images = await data.hits;
-    this.notificationOnFirstPage();
-    this.notificationForEndHits();
-    this.incrementPage();
-
-    return images;
+    try {
+      const options = this.getOptions();
+      const response = await axios.get(`?${options}`);
+      const data = await response.data;
+     
+      this.totalHits = data.totalHits;
+      this.totalPages = Math.ceil(this.totalHits / this.PER_PAGE);
+      this.resetEndOfHits();
+    
+        if (data.total === 0) {
+        throw new Error('Sorry, there are no images matching your search query. Please try again.');
+      }
+       
+      // try {
+        const images = await data.hits;
+        this.notificationOnFirstPage();
+        this.notificationForEndHits();
+        this.incrementPage();
+        return images;
+    } catch {
+      Notify.failure(error.message);
+     } 
   }
 
+  
   notificationOnFirstPage() {
     if (this.page === 1) {
       Notify.success(`Hooray! We found ${this.totalHits} images.`);
