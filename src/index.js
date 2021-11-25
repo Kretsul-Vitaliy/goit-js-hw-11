@@ -1,5 +1,5 @@
 import './sass/main.scss';
-
+'use strict';
 import { Notify } from 'notiflix/build/notiflix-notify-aio';
 import ImagesAPIService from './js/imageAPIservice';
 import LoadMoreBtn from './js/load-more-btn';
@@ -44,17 +44,27 @@ async function onFormSubmit(e) {
 
 // Load-More Button handler
 async function onloadMoreBtnClick() {
-  await initFetchImages();
+  try {
+    await initFetchImages();
+  } catch {
+    Notify.failure(error.message);
+  }
   pageScroll();
   renderMarkup.lightbox.refresh();
 }
 
 // Send request
 async function initFetchImages() {
-  loadMoreBtn.disable();
-  const images = await imagesAPIService.fetchImages();
-  renderMarkup.items = images;
-  renderMarkup.render();
+  
+  try {
+    loadMoreBtn.disable();
+    const images = await imagesAPIService.fetchImages();
+    renderMarkup.items = images;
+    renderMarkup.render();
+  } catch {
+    Notify.failure(error.message);
+  }
+   
 
   if (imagesAPIService.endOfHits) {
     loadMoreBtn.hideBtn();
